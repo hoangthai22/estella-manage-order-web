@@ -1,0 +1,1 @@
+export const Pages = ["HOME_PAGE", "REVENUE_PAGE", "ADD_PRODUCT_PAGE", "PRODUCT_PAGE", "ADD_ORDER_PAGE"];

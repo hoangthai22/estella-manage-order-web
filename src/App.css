@@ -8,8 +8,26 @@
 }
 .App {
     font-family: "myFont";
+    max-width: 800px;
+    margin: auto;
 }
-
+.loading__wrapper {
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgb(0 0 0 / 30%);
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loading__wrapper div {
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 10px;
+    width: 60px;
+    height: 60px;
+}
 @import url("https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps&family=Quicksand:wght@300;400;500;600&display=swap");
 body {
     margin: 0px;
@@ -26,6 +44,9 @@ body {
         }
        
     } */
+}
+.border__top {
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
 }
 .drawer__wrapper__item {
     font-size: 14px;
@@ -71,11 +92,14 @@ body {
 }
 
 .header__wrapper {
+    z-index: 98;
+    max-width: 800px;
     position: fixed;
     z-index: 99;
     height: 60px;
     width: 100%;
     background-color: #db7093;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 .header__container {
     padding: 0px 16px;
@@ -122,9 +146,10 @@ body {
     background-color: #fff;
     color: #db7093;
     min-height: 50px;
-    border-radius: 15px;
+    border-radius: 10px;
     font-size: 18px;
     font-family: "myFont";
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 5%), 0px 2px 2px 0px rgb(0 0 0 / 5%), 0px 1px 5px 0px rgb(0 0 0 / 5%);
 }
 .home__order__btn span {
     margin-left: 5px;
@@ -132,12 +157,13 @@ body {
 /*-------------------- Order Item */
 .orderItem__wrapper {
     position: relative;
-    border-radius: 15px;
+    border-radius: 10px;
     height: 165px;
     background-color: #fff;
     display: flex;
     flex-direction: column;
     padding: 10px;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 5%), 0px 2px 2px 0px rgb(0 0 0 / 5%), 0px 1px 5px 0px rgb(0 0 0 / 5%);
 }
 
 .orderItem__image {
@@ -147,7 +173,7 @@ body {
 }
 .orderItem__image div {
     overflow: hidden;
-    border-radius: 15px;
+    border-radius: 10px;
     width: 65px;
 }
 .orderItem__image div img {
@@ -205,11 +231,481 @@ body {
     line-height: 14px;
     height: 35px;
     width: 50%;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 5%), 0px 2px 2px 0px rgb(0 0 0 / 5%), 0px 1px 5px 0px rgb(0 0 0 / 5%);
 }
 .orderItem__icon__edit__wrapper {
     position: absolute;
     right: 10px;
     top: 10px;
-    font-size: 20px;
+    font-size: 24px;
     color: #db7093;
+}
+
+/* -----------------------Product Page */
+.add__product__wrapper {
+    padding: 80px 15px 15px 15px;
+}
+.add__product__image__wrapper {
+    background-color: #fff;
+}
+.upload__image-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding-top: 15px;
+
+    align-items: center;
+}
+.add__product__image__review {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #db7093;
+    width: 150px;
+    height: 150px;
+    border: 1px dotted #db7093;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.image-item {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+.image-item img {
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    object-fit: cover;
+    height: 100%;
+}
+.image-item__icon {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+}
+.image-item__icon__item {
+    font-size: 24px;
+    background-color: rgb(250, 250, 250);
+    border-radius: 50%;
+    z-index: 99;
+    border: 2px solid #fff;
+}
+
+.add__product__info__wrapper {
+    padding: 15px 0 0 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
+.add__product__info__container:last-child {
+    padding: 0px 15px 15px 15px;
+}
+.add__product__info__container {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.add__product__info__title {
+    margin-bottom: 10px;
+    font-family: "myFont";
+    font-size: 17px;
+}
+.add__product__info__title span {
+    color: red;
+}
+.add__product__info__input {
+    font-family: "myFont";
+    border: none;
+    border-bottom: 1px solid rgb(0 0 0 / 12%);
+    height: 40px;
+    font-size: 16px;
+    padding: unset;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+.add__product__info__input:focus-visible {
+    outline: none;
+}
+.add__product__info__size__wrapper {
+    margin-top: 5px;
+    font-family: "myFont";
+    display: flex;
+    font-size: 16px;
+    justify-content: center;
+    padding: 5px;
+    align-items: center;
+    width: 65px;
+    height: 30px;
+    border: 1px dotted rgb(180, 180, 180);
+}
+.add__product__modal__form {
+    width: 100%;
+    font-family: "myFont";
+}
+.add__product__modal__input {
+}
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f5f5f5;
+}
+.add__product__modal__input__radio {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    height: 30px;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.add__product__modal__btn {
+    margin: auto;
+    text-align: center;
+}
+.ReactModal__Overlay {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 999;
+}
+.add__product__modal__btn button {
+    margin-top: 15px;
+    font-family: "myFont";
+    border-radius: 10px;
+    border: 1px solid #db7093;
+    font-size: 16px;
+    background-color: #db7093;
+    color: #fff;
+    height: 40px;
+    width: 80%;
+}
+h2 {
+    font-size: 22px;
+    font-family: "myFont";
+}
+input[type="radio"] {
+    -ms-transform: scale(1.3); /* IE 9 */
+    -webkit-transform: scale(1.3); /* Chrome, Safari, Opera */
+    transform: scale(1.3);
+}
+.add__product__modal__input__radio__content {
+    padding: 15px;
+    display: flex;
+    gap: 20px;
+}
+.add__product__modal__input__radio__content select {
+    height: 35px;
+    width: 50%;
+    font-size: 16px;
+    text-align: center;
+}
+.error {
+    color: red;
+    font-family: "myFont";
+}
+.add__product__modal__error {
+    color: red;
+    font-family: "myFont";
+}
+.add__product__info__btn {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "myFont";
+    border-radius: 10px;
+    border: 1px solid #db7093;
+    font-size: 16px;
+    background-color: #db7093;
+    color: #fff;
+    height: 45px;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+/* ---------------------List Product page */
+.products__wrapper {
+    padding: 75px 15px 15px 15px;
+}
+.products__container {
+    width: 100%;
+}
+.products__item__wrapper {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.products__item {
+    position: relative;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 5%), 0px 2px 2px 0px rgb(0 0 0 / 5%), 0px 1px 5px 0px rgb(0 0 0 / 5%);
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    height: 100%;
+}
+.products__item__img {
+    padding: 10px;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+}
+.products__item__img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+.products__item__info {
+    padding: 10px;
+    width: 70%;
+    height: 100%;
+}
+.products__item__info__name {
+    font-size: 19px;
+    padding-bottom: 5px;
+    font-weight: 600;
+}
+.products__item__info__price {
+    padding: 2px 0px;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.products__item__btn {
+}
+
+/* ----------------------Add Order Page */
+.add__order__wrapper {
+    padding: 75px 15px 15px 15px;
+}
+.add__order__item__review__wrapper {
+    padding: 10px;
+    background-color: #fff;
+}
+.add__order__container {
+}
+.add__order__item__review {
+}
+.add__order__item__review span {
+    font-size: 18px;
+    font-weight: 600;
+}
+.add__order__item__review__image {
+    margin-top: 15px;
+    color: #db7093;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 120px;
+    border: 1px dotted #db7093;
+    padding: 10px;
+    border-radius: 10px;
+}
+.add__order__item__wrapper {
+    background-color: #fff;
+    padding: 10px;
+}
+.add__order__item__wrapper label {
+    font-size: 18px;
+    font-weight: 600;
+}
+.add__order__item__input {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.add__order__item__input textarea {
+    width: 100%;
+    padding-right: auto;
+    font-family: "myFont";
+    border: none;
+    border: 1px solid rgb(0 0 0 / 12%);
+    height: 80px;
+    font-size: 16px;
+    padding: unset;
+    border-radius: 10px;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+.add__order__item__radio {
+    margin-top: 15px;
+    display: flex;
+    gap: 30px;
+}
+.add__order__item__radio input {
+    margin-right: 10px;
+}
+.add__order__item__input input {
+    /* width: calc(100% - 15px); */
+    font-family: "myFont";
+    border: none;
+    border: 1px solid rgb(0 0 0 / 12%);
+    height: 40px;
+    font-size: 16px;
+    /* padding: unset; */
+    border-radius: 10px;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+.add__order__item__btn button {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "myFont";
+    border-radius: 10px;
+    border: 1px solid #db7093;
+    font-size: 16px;
+    background-color: #db7093;
+    color: #fff;
+    height: 45px;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.add__order__modal__form {
+    max-height: 380px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.add__order__modal__title {
+    font-size: 22px;
+    font-family: "myFont";
+    font-weight: 600;
+    margin-top: 0px;
+}
+.add__order__modal__item {
+    display: flex;
+    gap: 15px;
+}
+.add__order__modal__item__img {
+    width: 60px;
+    height: 60px;
+}
+.add__order__modal__item__img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+.add__order__modal__item__info {
+    padding: 10px 0px;
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+}
+/* .add__order__modal__item__checkbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+} */
+.add__order__modal__item__checkbox {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.add__order__modal__item__checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+    border: 1px solid rgb(0 0 0 / 20%);
+    border-radius: 5px;
+}
+
+/* On mouse-over, add a grey background color */
+/* .add__order__modal__item__checkbox:hover input ~ .checkmark {
+    background-color: #fff;
+    border: 1px solid rgb(0 0 0 / 20%);
+    border-radius: 5px;
+} */
+
+/* When the checkbox is checked, add a blue background */
+.add__order__modal__item__checkbox input:checked ~ .checkmark {
+    background-color: #db7093;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.add__order__modal__item__checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.add__order__modal__item__checkbox .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.add__order__modal__form__btn {
+    display: flex;
+    gap: 10px;
+}
+.add__order__modal__form__btn button:first-child{
+    border: 1px solid #db7093;
+    background-color: #fff;
+    color: #db7093;
+}
+.add__order__modal__form__btn button {
+    overflow: hidden;
+    width: 50%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "myFont";
+    border-radius: 10px;
+    border: 1px solid #db7093;
+    background-color: #db7093;
+    font-size: 16px;
+    color: #fff;
+    height: 40px;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 8%), 0px 2px 2px 0px rgb(0 0 0 / 8%), 0px 1px 5px 0px rgb(0 0 0 / 8%);
 }
