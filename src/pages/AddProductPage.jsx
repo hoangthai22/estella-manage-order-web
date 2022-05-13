@@ -1,19 +1,25 @@
+import { async } from "@firebase/util";
 import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useState } from "react";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import React, { useContext, useEffect, useState } from "react";
 import ImageUploading from "react-images-uploading";
-import Modal from "react-modal/lib/components/Modal";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getListProducts, getProductById, postProduct, putProduct } from "../apis/apiServices";
+import { createNotification } from "../components/Notification/Notification";
 import { AppContext } from "../context/AppContext";
 import { storage } from "../firebase/firebase";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { useHistory } from "react-router-dom";
 const AddProductPage = () => {
-    const { setIsLoading } = useContext(AppContext);
+    const { setIsLoading, setProductList } = useContext(AppContext);
     const [images, setImages] = React.useState([]);
     const [isError, setIsError] = useState(false);
     const [name, setName] = useState("");
     const [priceOrianal, setPriceOrianal] = useState("");
     const [price, setPrice] = useState("");
+    const [product, setProduct] = useState({});
+    const location = useLocation();
+
     // const [isCheckedSize, setIsCheckedSize] = useState("Number");
     // const [sizeFrom, setSizeFrom] = useState(25);
     // const [sizeTo, setSizeTo] = useState(42);
@@ -22,49 +28,167 @@ const AddProductPage = () => {
     // const [isError, setIsError] = useState(false);
     // const [isValid, setisValid] = useState(false);
     // let listSizeSML = ["S", "M", "L", "XL", "2XL", "3XL", "4XL"];
+    window.onpopstate = () => {
+        history("/products");
+    };
+    useEffect(() => {
+        if (location.state !== null) {
+            setIsLoading(true);
+            getProductById(location.state.id).then((res) => {
+                if (res != null) {
+                    setProduct(res.data);
+                    setPrice(res.data.price);
+                    setPriceOrianal(res.data.originalPrice);
+                    setName(res.data.productOrderName);
+                    setIsLoading(false);
+                }
+            });
+        }
+    }, [location.state]);
+
     const maxNumber = 69;
     const onChange = (imageList, addUpdateIndex) => {
         setImages(imageList);
     };
+    const history = useNavigate();
+    const handleUpdate = () => {
+        const metadata = {
+            contentType: "image/jpeg",
+        };
+        if (images.length > 0) {
+            if (price === "" || priceOrianal === "" || name === "") {
+                setIsError(true);
+            } else {
+                setIsError(false);
+                setIsLoading(true);
+                const storageRef = ref(storage, "images/" + images[0].file.name);
+                const uploadTask = uploadBytesResumable(storageRef, images[0].file, metadata);
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {},
+                    (error) => {
+                        // eslint-disable-next-line default-case
+                        switch (error.code) {
+                            case "storage/unauthorized":
+                                break;
+                            case "storage/canceled":
+                                break;
 
+                            case "storage/unknown":
+                                break;
+                        }
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                            console.log("File available at", downloadURL);
+                            // history("/products", { replace: true, state: { isReload: true } });
+                            putProduct(product._id, {
+                                productOrderImage: downloadURL,
+                                productOrderName: name,
+                                originalPrice: parseInt(priceOrianal),
+                                price: parseInt(price),
+                                checked: false,
+                            })
+                                .then((res) => {})
+                                .then(() => {
+                                    reloadProductsPage().then(() => {
+                                        setIsLoading(false);
+                                        createNotification("success", "Cập nhật sản phẩm thành công");
+                                    });
+                                })
+                                .catch((err) => {
+                                    setIsLoading(false);
+                                    createNotification("error", "Đã có lỗi xảy ra!");
+                                });
+                        });
+                    }
+                );
+            }
+        } else {
+            if (price === "" || priceOrianal === "" || name === "") {
+                setIsError(true);
+            } else {
+                setIsLoading(true);
+                putProduct(product._id, {
+                    productOrderImage: product.productOrderImage,
+                    productOrderName: name,
+                    originalPrice: parseInt(priceOrianal),
+                    price: parseInt(price),
+                    checked: false,
+                })
+                    .then((res) => {})
+                    .then(() => {
+                        reloadProductsPage().then(() => {
+                            setIsLoading(false);
+                            createNotification("success", "Cập nhật sản phẩm thành công");
+                        });
+                    })
+                    .catch((err) => {
+                        setIsLoading(false);
+                        createNotification("error", "Đã có lỗi xảy ra!");
+                    });
+            }
+        }
+    };
+    const reloadProductsPage = async () => {
+        await getListProducts().then((res) => {
+            if (res.data !== null) {
+                setProductList(res.data);
+            }
+        });
+    };
     const handleSubmit = () => {
         const metadata = {
             contentType: "image/jpeg",
         };
-        const storageRef = ref(storage, "images/" + images[0].file.name);
-        const uploadTask = uploadBytesResumable(storageRef, images[0].file, metadata);
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => {},
-            (error) => {
-                // eslint-disable-next-line default-case
-                switch (error.code) {
-                    case "storage/unauthorized":
-                        break;
-                    case "storage/canceled":
-                        break;
+        if (images.length > 0) {
+            if (price === "" || priceOrianal === "" || name === "") {
+                setIsError(true);
+            } else {
+                setIsError(false);
+                setIsLoading(true);
+                const storageRef = ref(storage, "images/" + images[0].file.name);
+                const uploadTask = uploadBytesResumable(storageRef, images[0].file, metadata);
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {},
+                    (error) => {
+                        // eslint-disable-next-line default-case
+                        switch (error.code) {
+                            case "storage/unauthorized":
+                                break;
+                            case "storage/canceled":
+                                break;
 
-                    case "storage/unknown":
-                        break;
-                }
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log("File available at", downloadURL);
-                });
+                            case "storage/unknown":
+                                break;
+                        }
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                            console.log("File available at", downloadURL);
+                            history("/products", { replace: true, state: { isReload: true } });
+                            postProduct({
+                                productOrderImage: downloadURL,
+                                productOrderName: name,
+                                originalPrice: priceOrianal,
+                                price: price,
+                            })
+                                .then((res) => {
+                                    history("/products", { isReload: true });
+                                    setIsLoading(false);
+                                    createNotification("success", "Tạo sản phẩm thành công");
+                                })
+                                .catch((err) => {
+                                    createNotification("error", "Đã có lỗi xảy ra!");
+                                });
+                        });
+                    }
+                );
             }
-        );
-        // const uploadTask = storage.ref
-        // setIsLoading(true);
-        // setTimeout(() => {
-        //     setIsLoading(false);
-        // }, 2000);
-        // // console.log(images);
-        // if (price === "" || priceOrianal === "" || images.length === 0 || name === "") {
-        //     setIsError(true);
-        // } else {
-        //     setIsError(false);
-        // }
+        } else {
+            setIsError(true);
+        }
     };
     // let subtitle;
     // const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -134,28 +258,45 @@ const AddProductPage = () => {
             <div className="add__product__container">
                 <div className="add__product__image__wrapper">
                     <div className="add__product__image">
-                        <ImageUploading value={images} onChange={onChange} maxNumber={maxNumber} dataURLKey="data_url">
-                            {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
-                                // write your building UI
-                                <div className="upload__image-wrapper">
-                                    {imageList.length === 0 ? (
-                                        <div className="add__product__image__review" onClick={onImageUpload} {...dragProps}>
-                                            Thêm ảnh
-                                        </div>
-                                    ) : (
-                                        imageList.map((image, index) => (
-                                            <div key={index} className="image-item">
-                                                <div className="image-item__icon">
-                                                    <FontAwesomeIcon className="image-item__icon__item" icon={faCircleXmark} onClick={() => onImageRemove(index)} />
-                                                </div>
-                                                <img src={image["data_url"]} alt="" width="100" />
-                                                <div className="image-item__btn-wrapper"></div>
+                        {product.productOrderImage && product.productOrderImage !== "" ? (
+                            <ImageUploading value={images} onChange={onChange} maxNumber={maxNumber} dataURLKey="data_url">
+                                {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
+                                    // write your building UI
+                                    <div className="upload__image-wrapper">
+                                        <div key={product.productOrderImage} className="image-item">
+                                            <div className="image-item__icon">
+                                                <FontAwesomeIcon className="image-item__icon__item" icon={faCircleXmark} onClick={() => setProduct({ ...product, productOrderImage: "" })} />
                                             </div>
-                                        ))
-                                    )}
-                                </div>
-                            )}
-                        </ImageUploading>
+                                            <img src={product.productOrderImage} alt="" width="100" />
+                                            <div className="image-item__btn-wrapper"></div>
+                                        </div>
+                                    </div>
+                                )}
+                            </ImageUploading>
+                        ) : (
+                            <ImageUploading value={images} onChange={onChange} maxNumber={maxNumber} dataURLKey="data_url">
+                                {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
+                                    // write your building UI
+                                    <div className="upload__image-wrapper">
+                                        {imageList.length === 0 ? (
+                                            <div className="add__product__image__review" onClick={onImageUpload} {...dragProps}>
+                                                Thêm ảnh
+                                            </div>
+                                        ) : (
+                                            imageList.map((image, index) => (
+                                                <div key={index} className="image-item">
+                                                    <div className="image-item__icon">
+                                                        <FontAwesomeIcon className="image-item__icon__item" icon={faCircleXmark} onClick={() => onImageRemove(index)} />
+                                                    </div>
+                                                    <img src={image["data_url"]} alt="" width="100" />
+                                                    <div className="image-item__btn-wrapper"></div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                )}
+                            </ImageUploading>
+                        )}
                     </div>
                 </div>
                 <div className="add__product__info__wrapper">
@@ -163,19 +304,19 @@ const AddProductPage = () => {
                         <label className="add__product__info__title">
                             Tên sản phẩm <span>*</span>
                         </label>
-                        <input className="add__product__info__input" placeholder="Nhập tên sản phẩm" onChange={(val) => setName(val.target.value)} />
+                        <input className="add__product__info__input" placeholder="Nhập tên sản phẩm" value={name} onChange={(val) => setName(val.target.value)} />
                     </div>
                     <div className="add__product__info__container">
                         <label className="add__product__info__title">
                             Giá gốc <span>*</span> ( giá tệ + phí vận chuyển )
                         </label>
-                        <input type="number" className="add__product__info__input" placeholder="Nhập giá gốc sản phẩm" onChange={(val) => setPriceOrianal(val.target.value)} />
+                        <input type="number" className="add__product__info__input" placeholder="Nhập giá gốc sản phẩm" value={priceOrianal} onChange={(val) => setPriceOrianal(val.target.value)} />
                     </div>
                     <div className="add__product__info__container">
                         <label className="add__product__info__title">
                             Giá bán <span>*</span> ( giá mà bán lời á bà )
                         </label>
-                        <input type="number" className="add__product__info__input" placeholder="Nhập giá bán sản phẩm" onChange={(val) => setPrice(val.target.value)} />
+                        <input type="number" className="add__product__info__input" placeholder="Nhập giá bán sản phẩm" value={price} onChange={(val) => setPrice(val.target.value)} />
                     </div>
                     {isError && (
                         <div className="add__product__info__container">
@@ -183,8 +324,16 @@ const AddProductPage = () => {
                         </div>
                     )}
 
-                    <div className="add__product__info__container" onClick={() => handleSubmit()}>
-                        <button className="add__product__info__btn">Thêm sản phẩm</button>
+                    <div className="add__product__info__container">
+                        {location.state !== null ? (
+                            <button onClick={() => handleUpdate()} className="add__product__info__btn">
+                                Cập nhật
+                            </button>
+                        ) : (
+                            <button onClick={() => handleSubmit()} className="add__product__info__btn">
+                                Thêm sản phẩm
+                            </button>
+                        )}
                     </div>
                     {/* <div className="add__product__info__container">
                         <label className="add__product__info__title">

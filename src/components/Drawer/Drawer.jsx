@@ -1,5 +1,5 @@
 // @flow
-import { faCloudShowersWater, faListCheck, faMoneyBillWave, faPiggyBank, faPlusCircle, faReorder, faShirt } from "@fortawesome/free-solid-svg-icons";
+import { faCloudShowersWater, faListCheck, faMoneyBillWave, faPiggyBank, faPlusCircle, faProcedures, faReorder, faShirt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,10 +25,18 @@ export const DrawerContent = (props) => {
             history("/add-product");
         } else if (page === Pages[3]) {
             history("/products");
+        } else if (page === Pages[4]) {
+            history("/add-order");
         }
     };
     return (
         <div className="drawer__wrapper">
+            <div className="drawer__wrapper__item" onClick={() => handleChangePage(Pages[4])}>
+                <span>Thêm đơn hàng mới</span>
+                <div>
+                    <FontAwesomeIcon className="header__Mobile__menu__icon" style={{ fontSize: 18 }} icon={faMoneyBillWave} />
+                </div>
+            </div>
             <div className="drawer__wrapper__item" onClick={() => handleChangePage(Pages[0])}>
                 <span>Danh sách Đơn hàng</span>
                 <div>

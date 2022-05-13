@@ -1,19 +1,21 @@
+import { useContext, useState } from "react";
+import ReactLoading from "react-loading";
+import Drawer from "react-modern-drawer";
+import "react-modern-drawer/dist/index.css";
+import { NotificationContainer } from "react-notifications";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { DrawerContent } from "./components/Drawer/Drawer";
 import Header from "./components/Header/Header";
-import HomePage from "./pages/HomePage";
-import Drawer from "react-modern-drawer";
-import { useContext, useState } from "react";
-import "react-modern-drawer/dist/index.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import RevenuePage from "./pages/RevenuePage";
-import ReactLoading from "react-loading";
-import AppProvider, { AppContext } from "./context/AppContext";
-import AddProductPage from "./pages/AddProductPage";
-import ProductsPage from "./pages/ProductsPage";
+import { AppContext } from "./context/AppContext";
 import AddOrderPage from "./pages/AddOrderPage";
-import { NotificationContainer } from "react-notifications";
-
+import AddProductPage from "./pages/AddProductPage";
+import HomePage from "./pages/HomePage";
+import ProductsPage from "./pages/ProductsPage";
+import RevenuePage from "./pages/RevenuePage";
+import 'react-loading-skeleton/dist/skeleton.css'
+import OrderDetailPage from "./pages/OrderDetailPage";
+import SearchPage from "./pages/SearchPage";
 function App() {
     const { isLoading } = useContext(AppContext);
     const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +48,8 @@ function App() {
                     <Route path="/add-product" element={<AddProductPage />} />
                     <Route path="/products" element={<ProductsPage />} />
                     <Route path="/add-order" element={<AddOrderPage />} />
+                    <Route path="/order-detail/:id" element={<OrderDetailPage />} />
+                    <Route path="/search" element={<SearchPage />} />
                 </Routes>
                 <NotificationContainer />
             </div>
